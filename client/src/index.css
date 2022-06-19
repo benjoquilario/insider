@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .ripple {
+    @apply relative overflow-hidden;
+  }
+
+  .rippleContainer {
+    @apply absolute inset-0;
+  }
+
+  .rippleContainer span {
+    @apply scale-0 rounded-full absolute opacity-70 bg-white animate-[ripple_850ms];
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  /* border-radius: 100vh; */
+  background: #111827;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 100vh;
+  border: 2px solid #152232;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1f2937;
+}
