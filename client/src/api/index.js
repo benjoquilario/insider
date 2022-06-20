@@ -26,5 +26,9 @@ export const updateProfile = (id, updatedProfile) =>
   API.patch(`profile/${id}/updateProfile`, updatedProfile);
 
 export const fetchProfile = id => API.get(`/profile/${id}`);
+
+export const postComment = (id, postComment) =>
+  API.post(`/posts/${id}/comment`, { postComment });
+
 export const signIn = formData => API.post('/user/signin', formData);
 export const signUp = formData => API.post('/user/signup', formData);
