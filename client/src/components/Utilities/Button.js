@@ -64,12 +64,18 @@ class Button extends React.Component {
   };
 
   render() {
-    const { children = null, classes = '', onClickHandler = null } = this.props;
+    const {
+      children = null,
+      classes = '',
+      onClickHandler = null,
+      ariaLabel = null,
+    } = this.props;
     return (
       <button
         ref="targetElement"
         className={'ripple ' + classes}
         onClick={onClickHandler}
+        aria-label={ariaLabel}
       >
         {children}
         <div
