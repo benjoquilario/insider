@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import moment from 'moment';
-import { likePost } from '../../../actions/posts';
+import { likePost, commentPost } from '../../../actions/posts';
 import { BiDotsHorizontalRounded, BiMessageDots } from 'react-icons/bi';
 import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
 import { FaShare } from 'react-icons/fa';
@@ -9,15 +9,34 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import capitalizeName from '../../../utilities/capitalizeName';
 import Button from '../../Utilities/Button';
+import Comment from '../../Comments/Comment';
 
 const Post = ({ post, setCurrentId }) => {
   const user = JSON.parse(localStorage.getItem('profile'));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [likes, setLikes] = useState(post?.likes);
+  const [commentData, setCommentData] = useState('');
+  const [comments, setComments] = useState(post?.comments);
   const userId = user?.result?._id;
   const hasLikedPost = post?.likes?.find(like => like === userId);
   const dispatch = useDispatch();
+  const buttonRef = useRef(null);
+
+  const handleCreateComment = async event => {
+    event.preventDefault();
+    const newComments = await dispatch(commentPost(post._id, commentData));
+
+    setCommentData('');
+    setComments(newComments);
+  };
+
+  const handleKeyPress = event => {
+    if (event.keyCode === 13 && event.shiftKey === false) {
+      event.preventDefault();
+      buttonRef.current.click();
+    }
+  };
 
   const handleLike = () => {
     dispatch(likePost(post._id));
@@ -29,22 +48,22 @@ const Post = ({ post, setCurrentId }) => {
   const LikeIcon = () => {
     if (likes?.length > 0) {
       return likes.find(like => like === userId) ? (
-        <AiFillLike size={20} />
+        <AiFillLike aria-hidden="true" size={20} />
       ) : (
-        <AiOutlineLike size={20} />
+        <AiOutlineLike aria-hidden="true" size={20} />
       );
     }
 
-    return <AiOutlineLike size={20} />;
+    return <AiOutlineLike aria-hidden="true" size={20} />;
   };
 
   return (
     <div className="bg-gray-800 rounded-md flex flex-col gap-1 relative z-10 overflow-hidden">
       <div className="flex gap-3 p-3">
-        <Link to={`profile/${post.creator}`}>
+        <Link to={`profile/${post.creator}`} aria-label={post.name}>
           <img
             src="https://res.cloudinary.com/securing-future/image/upload/v1634784867/lrbkmns3lttmmtdn22y4.jpg"
-            alt="name"
+            alt={post.name}
             className="w-11 h-11 rounded-full object-cover mx-0"
           />
         </Link>
@@ -52,13 +71,16 @@ const Post = ({ post, setCurrentId }) => {
           <Link
             to={`profile/${post.creator}`}
             className="text-white font-semibold block"
+            aria-label={post.name}
           >
             {user?.result?._id === post?.creator
               ? 'You'
               : capitalizeName(post.name)}
           </Link>
           <span className="text-xs text-gray-300">
-            {moment(post.createdAt).fromNow()}
+            {post.createdAt === '2023-06-17T10:38:33.947Z'
+              ? 'Creator of Insider'
+              : moment(post.createdAt).fromNow()}
           </span>
         </div>
         {user?.result?._id === post?.creator && (
@@ -66,8 +88,9 @@ const Post = ({ post, setCurrentId }) => {
             <Button
               onClickHandler={() => setIsModalOpen(prev => !prev)}
               classes="absolute top-3 right-5 p-1 text-white rounded-full hover:bg-gray-700"
+              ariaLabel="action list"
             >
-              <BiDotsHorizontalRounded size={26} />
+              <BiDotsHorizontalRounded aria-hidden="true" size={26} />
             </Button>
           </div>
         )}
@@ -81,22 +104,25 @@ const Post = ({ post, setCurrentId }) => {
         <img
           className="w-full object-cover rounded"
           src={post.selectedFile}
-          alt="i"
+          alt="uploaded file"
         />
       )}
       <div className="flex justify-between items-center px-5 mt-3">
         <div className="flex items-center text-sm text-gray-300 gap-1">
-          <span>{likes?.length}</span>
-          <AiOutlineLike size={17} />
+          <AiOutlineLike aria-hidden="true" size={17} />
+          <span>{hasLikedPost ? likes?.length : 0}</span>
         </div>
         <div className="text-sm text-gray-300">
-          <span>1 Comment</span>
+          <span>
+            {`${comments?.length === 0 ? '' : comments?.length}`} Comment
+          </span>
         </div>
       </div>
       <div className="font-light pl-3 mt-1 border-t border-b border-gray-700 flex justify-around gap-3">
         <Button
           onClickHandler={handleLike}
           classes="flex-1 flex items-center justify-center gap-1 text-gray-400 py-2 px-6 hover:bg-gray-700 rounded-md"
+          ariaLabel="Like Post"
         >
           <LikeIcon />
           <span
@@ -108,12 +134,16 @@ const Post = ({ post, setCurrentId }) => {
         <Button
           onClickHandler={() => setShowComments(prev => !prev)}
           classes="flex-1 flex items-center justify-center gap-1 text-gray-400 py-2 px-6 hover:bg-gray-700 rounded-md"
+          ariaLabel="Leave a Comment"
         >
-          <BiMessageDots size={20} />
+          <BiMessageDots aria-hidden="true" size={20} />
           <span className="text-xs text-gray-400">Comment</span>
         </Button>
-        <Button classes="flex-1 flex items-center justify-center gap-1 text-gray-400 py-2 px-6 hover:bg-gray-700 rounded-md">
-          <FaShare size={20} />
+        <Button
+          ariaLabel="Share a post"
+          classes="flex-1 flex items-center justify-center gap-1 text-gray-400 py-2 px-6 hover:bg-gray-700 rounded-md"
+        >
+          <FaShare aria-hidden="true" size={20} />
           <span className="text-xs text-gray-400">Share</span>
         </Button>
       </div>
@@ -134,6 +164,9 @@ const Post = ({ post, setCurrentId }) => {
                     className="outline-none w-full bg-gray-900 text-sm placeholder-gray-400 font-light text-gray-200 pl-1"
                     type="text"
                     placeholder="Write a comment..."
+                    value={commentData}
+                    onChange={e => setCommentData(e.target.value)}
+                    onKeyDown={handleKeyPress}
                   ></textarea>
                   <textarea
                     style={{
@@ -154,13 +187,43 @@ const Post = ({ post, setCurrentId }) => {
                     tabIndex="-1"
                   ></textarea>
                 </div>
+                <button
+                  ref={buttonRef}
+                  onClick={handleCreateComment}
+                  type="submit"
+                  className="sr-only"
+                >
+                  Leave a comment
+                </button>
               </div>
             </form>
           </div>
+          {comments.length === 0 ? (
+            <div className="flex justify-center items-center w-full h-full">
+              <div className="space-y-3">
+                <p>No Comments found</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              {comments.length > 0 &&
+                comments.map(
+                  (comment, index) =>
+                    index < 3 && <Comment key={index} comment={comment} />
+                )}
+            </>
+          )}
         </div>
       )}
 
-      {isModalOpen && <Modal post={post} setCurrentId={setCurrentId} />}
+      {isModalOpen && (
+        <Modal
+          post={post}
+          setCurrentId={setCurrentId}
+          setIsModalOpen={setIsModalOpen}
+          setShowComments={setShowComments}
+        />
+      )}
     </div>
   );
 };
