@@ -18,8 +18,8 @@
 
 /* width */
 ::-webkit-scrollbar {
-  width: 9px;
-  height: 12px;
+  width: 10px;
+  height: 14px;
 }
 
 /* Track */
@@ -36,5 +36,5 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #1f2937;
+  background: #374151;
 }
