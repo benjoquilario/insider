@@ -7,8 +7,24 @@ import { AiFillDelete } from 'react-icons/ai';
 import { modalVariant } from '../../utilities/framerVariant';
 import Button from '../Utilities/Button';
 
-const Modal = ({ post, setCurrentId }) => {
+const Modal = ({ post, setCurrentId, setIsModalOpen, setShowComments }) => {
   const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    dispatch(deletePost(post._id));
+    setIsModalOpen(false);
+    setShowComments(false);
+  };
+
+  const handleEdit = () => {
+    setCurrentId(post._id);
+    dispatch({
+      type: 'CREATE_MODAL',
+      payload: true,
+    });
+    setIsModalOpen(false);
+    setShowComments(false);
+  };
 
   return (
     <AnimatePresence>
@@ -23,13 +39,8 @@ const Modal = ({ post, setCurrentId }) => {
           <ul className="p-2">
             <li className="hover:bg-gray-700 rounded py-2 px-3 transition duration-75">
               <Button
-                onClickHandler={() => {
-                  setCurrentId(post._id);
-                  dispatch({
-                    type: 'CREATE_MODAL',
-                    payload: { formModalOpen: true, actionModalOpen: false },
-                  });
-                }}
+                onClickHandler={handleEdit}
+                ariaLabel="Edit Post"
                 classes="flex items-center gap-2 w-full text-white"
               >
                 <FaEdit />
@@ -38,8 +49,9 @@ const Modal = ({ post, setCurrentId }) => {
             </li>
             <li className="hover:bg-gray-700 rounded py-2 px-3 transition duration-75">
               <Button
-                onClickHandler={() => dispatch(deletePost(post._id))}
+                onClickHandler={handleDelete}
                 classes="flex items-center gap-2 w-full text-white"
+                ariaLabel="Delete Post"
               >
                 <AiFillDelete />
                 <span className="text-sm">Delete Post</span>
