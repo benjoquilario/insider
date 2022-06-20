@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import FileBase from 'react-file-base64';
 import { useDispatch, useSelector } from 'react-redux';
@@ -59,6 +59,7 @@ const Form = ({ currentId, setCurrentId }) => {
       <form autoComplete="off" noValidate className="" onSubmit={handleSubmit}>
         <textarea
           ref={ref}
+          aria-label={`What's on your mind, ${user?.result?.name}?`}
           className="w-full h-32 bg-gray-900 p-3 focus:outline-none rounded-t-md resize-none overflow-auto text-white"
           placeholder={`What's on your mind, ${capitalizeName(
             user?.result?.name
@@ -71,7 +72,9 @@ const Form = ({ currentId, setCurrentId }) => {
         ></textarea>
         <div className="bg-gray-900 p-3 rounded-b-md">
           {postData?.selectedFile && (
-            <img src={postData?.selectedFile} alt="post" />
+            <div className="relative overflow-auto h-56">
+              <img src={postData?.selectedFile} alt="post" />
+            </div>
           )}
           <div className="flex items-center gap-3">
             <p className="text-xs md:text-sm text-white">Upload Photo :</p>
