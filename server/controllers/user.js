@@ -9,17 +9,19 @@ export const signin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const existingUser = await UserModal.findOne({ email });
+    const existingUser = await UserModal.findOne({
+      email: email.toLowerCase(),
+    });
 
     if (!existingUser)
       return res.status(404), json({ message: "User doesn't exist" });
 
-    const isPasswordCorred = await bcrypt.compare(
+    const isPasswordCorrect = await bcrypt.compare(
       password,
       existingUser.password
     );
 
-    if (!isPasswordCorred)
+    if (!isPasswordCorrect)
       return res.status(400).json({ message: 'Invalid Credentials' });
     const token = jwt.sign(
       { email: existingUser.email, id: existingUser._id },
