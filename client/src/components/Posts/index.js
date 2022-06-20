@@ -56,7 +56,7 @@ const Posts = ({ hasMore, currentId, setCurrentId, setPage }) => {
           })}
         </ul>
       )}
-      {!hasMore && (
+      {!hasMore && !isLoading && (
         <p className="text-center text-sm">
           There are no more posts to show right now
         </p>
