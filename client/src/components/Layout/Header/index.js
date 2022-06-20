@@ -17,7 +17,7 @@ const Header = () => {
   return (
     <div className="hidden lg:block col-span-3">
       <div className="sticky top-0">
-        <Link to="/">
+        <Link to="/" aria-label="home - insider">
           <div className="text-2xl flex gap-3 justify-center items-center h-14 w-full font-light text-white">
             <img src={Logo} alt="Insider Home" className="h-11 w-11" />
             <span className="uppercase">Insider</span>
@@ -25,11 +25,11 @@ const Header = () => {
         </Link>
         <div className="px-2 py-5 rounded">
           <div className="flex justify-center">
-            <Link to={`profile/${user?.result?._id}`}>
+            <Link to={`profile/${user?.result?._id}`} aria-label="profile link">
               <img
                 className="h-12 w-12 rounded-full object-cover"
                 src="https://res.cloudinary.com/securing-future/image/upload/v1634784867/lrbkmns3lttmmtdn22y4.jpg"
-                alt="name"
+                alt={user?.result?.name}
               />
             </Link>
             <div className="flex flex-col justify-center ml-2">
@@ -50,6 +50,7 @@ const Header = () => {
             <ul className="flex flex-col items-start gap-1">
               <li className="w-full flex-1 flex items-start">
                 <Link
+                  aria-label="home"
                   className={`${
                     path.includes('/' || '/home')
                       ? 'bg-gray-800 text-[#6a55fa]'
@@ -57,16 +58,17 @@ const Header = () => {
                   } w-full hover:bg-gray-800 flex items-center gap-4  font-semibold py-[12px] px-[50px] rounded-xl transition`}
                   to="/"
                 >
-                  <AiFillHome size={29} />
+                  <AiFillHome aria-hidden="true" size={29} />
                   <span className="text-md text-white text-left">Home</span>
                 </Link>
               </li>
               <li className="w-full flex-1 flex items-start">
                 <Link
+                  aria-label="followers"
                   className="w-full hover:bg-gray-800 flex items-center gap-4 text-white font-semibold py-[12px] px-[50px] rounded-xl transition"
                   to="/followers"
                 >
-                  <BsPeopleFill size={29} />
+                  <BsPeopleFill aria-hidden="true" size={29} />
                   <span className="text-md text-white text-left">
                     Followers
                   </span>
@@ -74,10 +76,11 @@ const Header = () => {
               </li>
               <li className="w-full flex-1 flex items-start">
                 <Link
+                  aria-label="following"
                   className="w-full hover:bg-gray-800 flex items-start gap-4 text-white font-semibold py-[12px] px-[50px] rounded-xl transition"
                   to="/following"
                 >
-                  <IoIosPeople size={29} />
+                  <IoIosPeople aria-hidden="true" size={29} />
                   <span className="text-md text-white text-left">
                     Following
                   </span>
@@ -85,10 +88,11 @@ const Header = () => {
               </li>
               <li className="w-full flex-1 flex items-start">
                 <Link
+                  aria-label="profile"
                   className="w-full hover:bg-gray-800 flex items-start gap-4 text-white font-semibold py-[12px] px-[50px] rounded-xl transition"
                   to="/following"
                 >
-                  <BsFillPersonFill size={29} />
+                  <BsFillPersonFill aria-hidden="true" size={29} />
                   <span className="text-md text-white text-left">Profile</span>
                 </Link>
               </li>
@@ -100,6 +104,7 @@ const Header = () => {
                       payload: true,
                     })
                   }
+                  ariaLabel="Create post"
                   classes="mt-4 bg-[#6a55fa] flex items-center justify-center text-white h-12 w-full rounded-full hover:bg-[#8371f8] transition duration-75"
                 >
                   Create Post
