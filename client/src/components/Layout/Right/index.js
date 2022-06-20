@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import capitalizeName from '../../../utilities/capitalizeName';
+import { useDispatch } from 'react-redux';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { BsFillPersonPlusFill } from 'react-icons/bs';
 import { BiExit } from 'react-icons/bi';
+import Button from '../../Utilities/Button';
 
 const Right = () => {
   const user = JSON.parse(localStorage.getItem('profile'));
   const [dropdown, setDropdown] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    dispatch({ type: 'LOGOUT' });
+    navigate('/auth', location.search);
+  };
 
   return (
     <div className="hidden xl:block xl:col-span-3">
@@ -17,12 +27,13 @@ const Right = () => {
             <Link
               to={`profile/${user?.result?._id}`}
               className="flex justify-center items-center"
+              aria-label={user?.result?.name}
             >
               <div>
                 <img
                   className="h-10 w-10 rounded-full object-cover"
                   src="https://res.cloudinary.com/securing-future/image/upload/v1634784867/lrbkmns3lttmmtdn22y4.jpg"
-                  alt="name"
+                  alt={user?.result?.name}
                 />
               </div>
               <div className="flex flex-col justify-center ml-2">
@@ -36,17 +47,23 @@ const Right = () => {
             <button
               onClick={() => setDropdown(prev => !prev)}
               className="flex justify-center items-center h-9 w-9 rounded-full bg-gray-800 text-white"
+              aria-label="list box"
+              aria-expanded={dropdown}
             >
               <IoMdArrowDropdown size={20} />
             </button>
             {dropdown && (
               <div className="absolute top-14 right-0 flex flex-col justify-center items-center w-48 bg-gray-800 py-3 px-4 rounded-md shadow-md z-10">
-                <Link to="/profile" className="flex items-center gap-2">
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2"
+                  aria-label={user?.result?.name}
+                >
                   <div>
                     <img
                       className="h-10 w-10 rounded-full object-cover"
                       src="https://res.cloudinary.com/securing-future/image/upload/v1634784867/lrbkmns3lttmmtdn22y4.jpg"
-                      alt="name"
+                      alt={user?.resul?.name}
                     />
                   </div>
                   <div className="flex flex-col ml-1">
@@ -54,10 +71,14 @@ const Right = () => {
                     <p className="text-xs text-gray-400">My Profile</p>
                   </div>
                 </Link>
-                <button className="border-t border-gray-400 rounded-xl mt-4 flex items-center justify-center gap-1 text-white w-full py-2 px-3 hover:bg-gray-900 transition duration-75">
-                  <BiExit size={18} />
-                  <span className="text-sm">Log Out</span>
-                </button>
+                <Button
+                  onClickHandler={logout}
+                  classes="border-t border-gray-400 rounded-xl mt-4 flex items-center justify-center gap-1 text-white w-full py-2 px-3 hover:bg-gray-900 transition duration-75"
+                  ariaLabel="logout user"
+                >
+                  <BiExit aria-hidden="true" size={18} />
+                  <span className="text-sm">Logout</span>
+                </Button>
               </div>
             )}
           </div>
@@ -70,7 +91,7 @@ const Right = () => {
               </p>
               <ul className="mt-3 w-full max-h-96 overflow-y-auto space-y-2">
                 <li className="relative h-16 overflow-hidden rounded-md">
-                  <Link to="profile">
+                  <Link to="profile" aria-label={user?.result?.name}>
                     <img
                       className="object-cover w-full h-full opacity-30 object-center"
                       src="https://res.cloudinary.com/securing-future/image/upload/v1655122268/w0luocz79lomub3hjj1j.jpg"
@@ -90,11 +111,14 @@ const Right = () => {
                         </h3>
                         <p className="text-gray-200 text-xs">0 Followers</p>
                       </div>
-                      <button className="ml-auto mr-3 flex justify-center items-center h-8 w-8 rounded-md text-white bg-[#6a55fa]">
-                        <BsFillPersonPlusFill size={15} />
-                      </button>
                     </div>
                   </Link>
+                  <Button
+                    ariaLabel="follow user"
+                    classes="absolute top-4 right-0 ml-auto mr-3 flex justify-center items-center h-8 w-8 rounded-md text-white bg-[#6a55fa]"
+                  >
+                    <BsFillPersonPlusFill aria-hidden="true" size={15} />
+                  </Button>
                 </li>
               </ul>
             </div>
