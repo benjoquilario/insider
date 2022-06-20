@@ -1,4 +1,4 @@
-import * as ActionType from '../constants/ActionTypes';
+import * as ActionTypes from '../constants/ActionTypes';
 
 const initialState = {
   isLoading: false,
@@ -7,11 +7,11 @@ const initialState = {
 
 const posts = (state = initialState, action) => {
   switch (action.type) {
-    case ActionType.CREATE:
+    case ActionTypes.CREATE:
       return { ...state, posts: [action.payload, ...state.posts] };
-    case ActionType.RESET_POSTS:
+    case ActionTypes.RESET_POSTS:
       return { ...state, isLoading: true, posts: [] };
-    case ActionType.FETCH_ALL:
+    case ActionTypes.FETCH_ALL:
       return {
         ...state,
         isLoading: false,
@@ -24,21 +24,30 @@ const posts = (state = initialState, action) => {
         currentPage: action.payload.currentPage,
         numberOfPages: action.payload.numberOfPages,
       };
-    case ActionType.UPDATE:
-    case ActionType.LIKE:
+    case ActionTypes.UPDATE:
+    case ActionTypes.LIKE:
       return {
         ...state,
         posts: state.posts.map(post =>
           post._id === action.payload._id ? action.payload : post
         ),
       };
-    case ActionType.DELETE:
+    case ActionTypes.DELETE:
       return {
         ...state,
         posts: state.posts.filter(post => post._id !== action.payload),
       };
-    case ActionType.POST_LOADING:
+    case ActionTypes.POST_LOADING:
       return { ...state, isLoading: true };
+    case ActionTypes.COMMENT:
+      return {
+        ...state,
+        posts: state.posts.map(post =>
+          post._id === action.payload._id
+            ? { ...post, comments: action.payload.comments }
+            : post
+        ),
+      };
     default:
       return state;
   }

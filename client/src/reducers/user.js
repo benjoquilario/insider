@@ -1,4 +1,4 @@
-import * as ActionType from '../constants/ActionTypes';
+import * as ActionTypes from '../constants/ActionTypes';
 
 const initialState = {
   loading: false,
@@ -9,7 +9,7 @@ const initialState = {
 
 const userReducers = (state = initialState, action) => {
   switch (action.type) {
-    case ActionType.FETCH_PROFILE:
+    case ActionTypes.FETCH_PROFILE:
       return { ...state, user: action.payload };
     default:
       return state;
