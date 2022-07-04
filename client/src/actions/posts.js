@@ -1,11 +1,34 @@
 import * as api from '../api';
-import * as ActionTypes from '../constants/ActionTypes';
+import * as TYPES from '../constants/ActionTypes';
+
+export const getPosts = (page, navigate, setHasMore) => async dispatch => {
+  try {
+    const requests = await api.fetchPosts(page);
+
+    if (requests.status === 200) {
+      const { data, currentPage, numberOfPages } = requests.data;
+      setHasMore(data.length > 0);
+
+      dispatch({
+        type: TYPES.FETCH_ALL,
+        payload: { data, currentPage, numberOfPages },
+      });
+    }
+  } catch (error) {
+    dispatch({ type: TYPES.ERROR, payload: error });
+    if (error.response?.status === 401) {
+      dispatch({ type: TYPES.LOGOUT });
+      navigate('/auth');
+    }
+  }
+};
 
 export const createPost = post => async dispatch => {
   try {
-    const { data } = await api.createPost(post);
+    const requests = await api.createPost(post);
 
-    dispatch({ type: ActionTypes.CREATE, payload: data });
+    if (requests.status === 201)
+      dispatch({ type: TYPES.CREATE, payload: requests.data });
   } catch (error) {
     console.log(error);
   }
@@ -13,9 +36,10 @@ export const createPost = post => async dispatch => {
 
 export const updatePost = (id, post) => async dispatch => {
   try {
-    const { data } = await api.updatePost(id, post);
+    const requests = await api.updatePost(id, post);
 
-    dispatch({ type: ActionTypes.UPDATE, payload: data });
+    if (requests.status === 200)
+      dispatch({ type: TYPES.UPDATE, payload: requests.data });
   } catch (error) {
     console.log(error);
   }
@@ -25,9 +49,10 @@ export const likePost = id => async dispatch => {
   const user = JSON.parse(localStorage.getItem('profile'));
 
   try {
-    const { data } = await api.likePost(id, user?.token);
+    const requests = await api.likePost(id, user?.token);
 
-    dispatch({ type: ActionTypes.LIKE, payload: data });
+    if (requests.status === 200)
+      dispatch({ type: TYPES.LIKE, payload: requests.data });
   } catch (error) {
     console.log(error);
   }
@@ -37,7 +62,7 @@ export const deletePost = id => async dispatch => {
   try {
     await api.deletePost(id);
 
-    dispatch({ type: ActionTypes.DELETE, payload: id });
+    dispatch({ type: TYPES.DELETE, payload: id });
   } catch (error) {
     console.log(error);
   }
@@ -45,11 +70,34 @@ export const deletePost = id => async dispatch => {
 
 export const commentPost = (id, comment) => async dispatch => {
   try {
-    const { data } = await api.postComment(id, comment);
+    dispatch({ type: TYPES.COMMENT_START_LOADING });
 
-    dispatch({ type: ActionTypes.COMMENT, payload: data });
+    const requests = await api.postComment(id, comment);
 
-    return data.comments;
+    dispatch({ type: TYPES.COMMENT_END_LOADING });
+
+    if (requests.status === 200)
+      dispatch({ type: TYPES.CREATE_COMMENT, payload: requests.data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateComment = (id, comment) => async dispatch => {
+  try {
+    const requests = await api.updateComment(id, comment);
+
+    dispatch({ type: TYPES.UPDATE_COMMENT, payload: requests.data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteComment = id => async dispatch => {
+  try {
+    const requests = await api.deleteComment(id);
+
+    dispatch({ type: TYPES.DELETE_COMMENT, payload: requests.data });
   } catch (error) {
     console.log(error);
   }
