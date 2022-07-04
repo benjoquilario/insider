@@ -1,13 +1,12 @@
 import mongoose from 'mongoose';
 
 import PostMessage from '../models/postsMessage.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export const getPosts = async (req, res) => {
   const { page } = req.query;
 
   try {
-    const LIMIT = 4;
+    const LIMIT = 2;
     const startIndex = (Number(page) - 1) * LIMIT;
 
     const total = await PostMessage.countDocuments({});
@@ -15,8 +14,8 @@ export const getPosts = async (req, res) => {
       .skip(startIndex)
       .limit(LIMIT)
       .sort({ createdAt: -1 })
-      .populate('users')
-      .populate('comments.user');
+      .populate('users', '-password')
+      .populate('comments.user', '-password');
 
     return res.status(200).json({
       data: posts,
@@ -43,7 +42,9 @@ export const createPost = async (req, res) => {
 
     const postCreated = await PostMessage.findOne({
       _id: newPostMessage._id,
-    }).populate('users');
+    })
+      .populate('users', '-password')
+      .populate('comments.user', '-password');
 
     return res.status(201).json(postCreated);
   } catch (error) {
@@ -97,7 +98,13 @@ export const likePost = async (req, res) => {
     new: true,
   });
 
-  return res.json(updatedPost);
+  const postCreated = await PostMessage.findOne({
+    _id: updatedPost._id,
+  })
+    .populate('users', '-password')
+    .populate('comments.user', '-password');
+
+  return res.json(postCreated);
 };
 
 export const deletePost = async (req, res) => {
@@ -131,7 +138,7 @@ export const commentPost = async (req, res) => {
       _id,
       comment: postComment,
       user: req.userId,
-      createdAt: new Date().toISOString(),
+      createdAt: Date.now(),
     };
 
     await post.comments.unshift(newComment);
@@ -139,6 +146,63 @@ export const commentPost = async (req, res) => {
 
     const commentCreated = await PostMessage.findOne({
       _id: post._id,
+    }).populate('comments.user');
+
+    return res.status(200).json(commentCreated);
+  } catch (error) {
+    return res.status(500).send('Server Error');
+  }
+};
+
+export const updateComment = async (req, res) => {
+  const { id: _id } = req.params;
+  const { commentData } = req.body;
+
+  try {
+    const posts = await PostMessage.findById(_id);
+
+    // const theComment = posts.comments.find((comment = comment._id === _id));
+    const theComment = posts.comments.find(comment => comment._id === _id);
+    if (!theComment) return res.status(404).send('Comment not found');
+
+    theComment.comment = commentData;
+
+    await posts.save();
+
+    const commentCreated = await PostMessage.findOne({
+      _id: posts._id,
+    }).populate('comments.user');
+
+    res.status(200).json(commentCreated);
+  } catch (error) {
+    return res.status(500).send('Server Error');
+  }
+};
+
+export const deleteComment = async (req, res) => {
+  const { id: _id } = req.params;
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(_id))
+      return res.status(404).send(`No post with id: ${_id}`);
+
+    const post = await PostMessage.findById(_id);
+
+    if (!post) return res.status(404).send('No Post found');
+
+    const commentIndex = post.comments.findIndex(
+      comment => comment._id === _id
+    );
+
+    if (commentIndex === -1) {
+      return res.status(404).send('Comment not found');
+    }
+
+    await post.comments.splice(commentIndex, 1);
+    await post.save();
+
+    const commentCreated = await PostMessage.findOne({
+      _id: _id,
     }).populate('comments.user');
 
     return res.status(200).json(commentCreated);
