@@ -1,36 +1,38 @@
-import * as ActionTypes from '../constants/ActionTypes';
+import * as TYPES from '../constants/ActionTypes';
 import * as api from '../api';
 
-export const signin = (formData, navigate, location) => async dispatch => {
+export const signin = (formData, navigate) => async dispatch => {
   try {
-    dispatch({ type: ActionTypes.LOADING });
+    dispatch({ type: TYPES.AUTH_START_LOADING });
 
     const { data } = await api.signIn(formData);
 
-    dispatch({ type: ActionTypes.LOADING_DONE });
-    dispatch({ type: ActionTypes.AUTH, data });
-    navigate('/', location.search);
+    dispatch({ type: TYPES.AUTH, payload: data });
+    dispatch({ type: TYPES.AUTH_FINISH_LOADING });
+    navigate('/');
   } catch (error) {
-    console.log(error);
+    const errors = error.response?.data;
+    dispatch({ type: TYPES.ERROR, payload: errors });
+    dispatch({ type: TYPES.AUTH_FINISH_LOADING });
   }
 };
 
-export const signup = (formData, navigate, location) => async dispatch => {
+export const signup = (formData, navigate) => async dispatch => {
   try {
-    dispatch({ type: ActionTypes.LOADING });
+    dispatch({ type: TYPES.START_LOADING });
 
     const { data } = await api.signUp(formData);
 
-    dispatch({ type: ActionTypes.LOADING_DONE });
-    dispatch({ type: ActionTypes.AUTH, data });
-    navigate('/', location.search);
+    dispatch({ type: TYPES.AUTH, payload: data });
+    dispatch({ type: TYPES.FINISH_LOADING });
+    navigate('/');
   } catch (error) {
-    const errors = error.response?.data.errors;
-    dispatch({ type: ActionTypes.ERR0R, payload: errors });
+    const errors = error.response?.data;
+    dispatch({ type: TYPES.ERROR, payload: errors });
   }
 };
 
-export const logout = (navigate, location) => async dispatch => {
-  dispatch({ type: ActionTypes.LOGOUT });
-  navigate('/auth', location.search);
+export const logout = navigate => async dispatch => {
+  dispatch({ type: TYPES.LOGOUT });
+  navigate('/auth');
 };
