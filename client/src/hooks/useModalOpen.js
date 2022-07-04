@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-export const useModalCloser = setCurrentId => {
+export const useModalCloser = () => {
   const { formModalOpen } = useSelector(state => state.modal);
   const ref = useRef(null);
   const dispatch = useDispatch();
@@ -32,23 +32,9 @@ export const useModalCloser = setCurrentId => {
         type: 'CREATE_MODAL',
         payload: false,
       });
-      setCurrentId(0);
+      dispatch({ type: 'CURRENT_ID', payload: 0 });
     }
   };
 
   return { handleClickOutside, ref };
-};
-
-export const useModalCloseX = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleClickOutside = () => setIsModalOpen(false);
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [isModalOpen]);
-
-  return { isModalOpen, setIsModalOpen };
 };
