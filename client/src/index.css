@@ -3,16 +3,16 @@
 @tailwind utilities;
 
 @layer components {
-  .ripple {
-    @apply relative overflow-hidden;
+  .navLink {
+    @apply w-full flex items-center gap-4 text-white font-semibold py-[12px] px-[50px] rounded-xl transition;
   }
 
-  .rippleContainer {
-    @apply absolute inset-0;
+  .focusBtn {
+    @apply focus:outline focus:outline-offset-2 focus:outline-2 outline-[#6a55fa];
   }
 
-  .rippleContainer span {
-    @apply scale-0 rounded-full absolute opacity-70 bg-white animate-[ripple_850ms];
+  .clamp {
+    @apply text-ellipsis	overflow-hidden;
   }
 }
 
