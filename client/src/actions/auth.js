@@ -11,22 +11,23 @@ export const signin = (formData, navigate) => async dispatch => {
     dispatch({ type: TYPES.AUTH_FINISH_LOADING });
     navigate('/');
   } catch (error) {
+    dispatch({ type: TYPES.AUTH_FINISH_LOADING });
     const errors = error.response?.data;
     dispatch({ type: TYPES.ERROR, payload: errors });
-    dispatch({ type: TYPES.AUTH_FINISH_LOADING });
   }
 };
 
 export const signup = (formData, navigate) => async dispatch => {
   try {
-    dispatch({ type: TYPES.START_LOADING });
+    dispatch({ type: TYPES.AUTH_START_LOADING });
 
     const { data } = await api.signUp(formData);
 
     dispatch({ type: TYPES.AUTH, payload: data });
-    dispatch({ type: TYPES.FINISH_LOADING });
+    dispatch({ type: TYPES.AUTH_FINISH_LOADING });
     navigate('/');
   } catch (error) {
+    dispatch({ type: TYPES.AUTH_FINISH_LOADING });
     const errors = error.response?.data;
     dispatch({ type: TYPES.ERROR, payload: errors });
   }
