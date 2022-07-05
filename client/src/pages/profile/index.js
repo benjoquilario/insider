@@ -14,7 +14,10 @@ const Profile = () => {
   const page = useSelector(state => state.posts.postPage);
 
   useEffect(() => {
-    return () => dispatch({ type: TYPES.USER_POST_DEFAULT_PAGE });
+    return () => {
+      dispatch({ type: TYPES.USER_POST_DEFAULT_PAGE });
+      dispatch({ type: TYPES.CLEAR_SEARCH_RESULTS });
+    };
   }, [dispatch]);
 
   useEffect(() => {

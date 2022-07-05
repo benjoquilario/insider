@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import * as ActionTypes from '../../constants/ActionTypes';
+import * as TYPES from '../../constants/ActionTypes';
 import { RiCloseFill } from 'react-icons/ri';
 import { useModalCloser } from '../../hooks/useModalOpen';
 import { AnimatePresence } from 'framer-motion';
@@ -27,12 +27,13 @@ const Home = () => {
   }, [navigate, user]);
 
   useEffect(() => {
-    dispatch({ type: ActionTypes.RESET_POSTS });
-    dispatch({ type: 'PAGE_DEFAULT_NUMBER' });
+    dispatch({ type: TYPES.RESET_POSTS });
+    dispatch({ type: TYPES.PAGE_DEFAULT_NUMBER });
+    dispatch({ type: TYPES.CLEAR_SEARCH_RESULTS });
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch({ type: ActionTypes.POST_LOADING });
+    dispatch({ type: TYPES.POST_LOADING });
 
     dispatch(getPosts(page, navigate, setHasMore));
   }, [currentPostId, dispatch, page, navigate]);
@@ -56,10 +57,10 @@ const Home = () => {
                     className="text-white rounded-full p-2 transition ease-in duration-75"
                     onClick={() => {
                       dispatch({
-                        type: 'CREATE_MODAL',
+                        type: TYPES.CREATE_MODAL,
                         payload: false,
                       });
-                      dispatch({ type: 'CURRENT_ID', payload: 0 });
+                      dispatch({ type: TYPES.CURRENT_POST_ID, payload: 0 });
                     }}
                   >
                     <RiCloseFill size={25} />
