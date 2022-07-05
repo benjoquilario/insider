@@ -15,6 +15,10 @@ app.use(cors());
 
 dotenv.config();
 
+app.get('/', (req, res) => {
+  res.send('APP IS RUNNING');
+});
+
 // Routes
 app.use('/posts', postRoutes);
 app.use('/auth', authRoutes);
