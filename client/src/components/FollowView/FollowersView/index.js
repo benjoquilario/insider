@@ -17,16 +17,16 @@ const FollowersView = () => {
     <div className="col-span-full lg:col-span-9 xl:col-span-6">
       <div className="relative">
         <h3 className="text-lg text-white">
-          Following ·{' '}
+          Followers ·{' '}
           <span>{followers?.length !== 0 && followers?.length}</span>
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 mt-3 gap-2">
+        <ul className="grid grid-cols-1 md:grid-cols-2 mt-3 gap-2">
           {followers?.length === 0
             ? Array.from(Array(6), (_, index) => <FollowLoading key={index} />)
             : followers?.map((follower, index) => (
                 <FollowCard key={index} follower={follower} />
               ))}
-        </div>
+        </ul>
       </div>
     </div>
   );
