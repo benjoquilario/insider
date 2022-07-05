@@ -16,7 +16,7 @@ const Home = () => {
   const user = JSON.parse(localStorage.getItem('profile'));
   const modal = useSelector(state => state.modal);
   const page = useSelector(state => state.posts.page);
-  const { currentPostId, currentCommentId } = useSelector(state => state.posts);
+  const { currentPostId } = useSelector(state => state.posts);
   const [hasMore, setHasMore] = useState(false);
   const { handleClickOutside, ref } = useModalCloser();
   const dispatch = useDispatch();
