@@ -5,7 +5,7 @@ import Auth from './pages/auth';
 import Profile from './pages/profile';
 import Followers from './pages/followers';
 import ProtectedRoutes from './pages/protected/ProtectedRoute';
-import Layout from './pages/layout/layout';
+import Layout from './pages/layout/';
 import './index.css';
 
 const App = () => {
