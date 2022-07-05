@@ -30,6 +30,7 @@ export const fetchUserWithPost = (id, page) =>
 export const fetchAllProfile = page => API.get(`/users?page=${page}`);
 export const fetchUser = id => API.get(`/users/${id}/user`);
 export const fetchAllUsers = page => API.get(`/users/users/all?page=${page}`);
+export const fetchSearchUser = query => API.get(`/users/search?q=${query}`);
 
 export const postComment = (id, postComment) =>
   API.post(`/posts/${id}/comment`, { postComment });

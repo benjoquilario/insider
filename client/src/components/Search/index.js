@@ -5,17 +5,14 @@ import { BiSearch } from 'react-icons/bi';
 const Search = () => {
   const [query, setQuery] = useState('');
 
-  const handleSearch = event => {
-    event.preventDefault();
-  };
-
   return (
-    <div className="relative" onSubmit={handleSearch}>
+    <div className="relative">
       <form className="relative">
         <div aria-live="polite" className="sr-only"></div>
         <input
-          name="search"
+          name="user"
           type="text"
+          // defaultValue={user ?? undefined}
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Search for a user..."
@@ -26,7 +23,7 @@ const Search = () => {
           seach for a user...
           <span className="sr-only">and press enter</span>
         </label>
-        <Link to={`http://localhost:5000/users/search?q=${query}`}>
+        <Link to={`/search?user=${query}`}>
           <button
             type="submit"
             className="text-white absolute top-0 bottom-0 flex items-center p-3"
