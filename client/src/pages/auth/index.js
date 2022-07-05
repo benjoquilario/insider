@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { signin, signup } from '../../actions/auth';
-import Input from '../../components/Input';
+import Input from '../../components/UI/Input';
+import AuthLoading from '../../components/UI/Loading/AuthLoading';
 import { initialForm } from '../../utilities/intialState';
 
 const Auth = () => {
+  const { errors, isLoading } = useSelector(state => state.auth);
   const [formData, setFormData] = useState(initialForm);
   const [isSignup, setIsSignup] = useState(false);
   const dispatch = useDispatch();
@@ -13,7 +15,8 @@ const Auth = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (localStorage.getItem('profile')) return navigate('/', location.search);
+    if (localStorage.getItem('profile'))
+      return navigate('/', { replace: true });
   }, [navigate, location]);
 
   const switchMode = () => {
@@ -26,13 +29,13 @@ const Auth = () => {
   const handleSubmit = event => {
     event.preventDefault();
 
-    if (isSignup) dispatch(signup(formData, navigate, location));
-    else dispatch(signin(formData, navigate, location));
+    if (isSignup) dispatch(signup(formData, navigate));
+    else dispatch(signin(formData, navigate));
   };
 
   return (
     <div className="flex items-center justify-center h-full w-full min-h-screen">
-      <div className="flex flex-col items-center justify-center max-w-full md:max-w-[400px] mx-auto mt-0 min-h-[430px] md:min-h-auto bg-white w-4/5 md:w-full py-[20px] px-[40px] text-center rounded">
+      <div className="flex flex-col items-center justify-center max-w-full md:max-w-[400px] mx-auto mt-0 min-h-[430px] md:min-h-auto bg-white w-4/5 md:w-full py-[20px] px-[24px] md:px-[40px] text-center rounded-md shadow-md">
         <h1 className="text-2xl mt-[13px] mb-[20px] font-semibold text-gray-900">
           {isSignup ? 'Sign Up to Insider' : 'Sign In to Insider'}
         </h1>
@@ -40,58 +43,112 @@ const Auth = () => {
           <div className="flex flex-col items-center justify-center">
             {isSignup && (
               <div className="flex gap-2">
-                <Input
-                  handleChange={handleChange}
-                  type="text"
-                  name="firstName"
-                  label="First Name"
-                  placeholder="First Name"
-                />
-                <Input
-                  handleChange={handleChange}
-                  type="text"
-                  name="lastName"
-                  label="Last Name"
-                  placeholder="Last Name"
-                />
+                <div className="flex flex-col items-start w-full mb-[8px]">
+                  <Input
+                    handleChange={handleChange}
+                    type="text"
+                    name="firstName"
+                    label="First Name"
+                    placeholder="First Name"
+                    classes={`border-2 border-gray-300 hover:border-gray-700 ${
+                      errors?.firstName
+                        ? 'border-red-500 focus:border-red-500'
+                        : 'border-gray-300 focus:border-blue-500'
+                    }`}
+                  />
+
+                  <p className="text-red-400 text-xs">{errors?.firstName}</p>
+                </div>
+                <div className="flex flex-col items-start w-full mb-[8px]">
+                  <Input
+                    handleChange={handleChange}
+                    type="text"
+                    name="lastName"
+                    label="Last Name"
+                    placeholder="Last Name"
+                    classes={`border-2 border-gray-300 hover:border-gray-700 ${
+                      errors?.lastName
+                        ? 'border-red-500 focus:border-red-500'
+                        : 'border-gray-300 focus:border-blue-500'
+                    }`}
+                  />
+                  <p className="text-red-400 text-xs">{errors?.lastName}</p>
+                </div>
               </div>
             )}
-            <Input
-              handleChange={handleChange}
-              type="email"
-              name="email"
-              label="Email"
-              placeholder="Email"
-            />
-            <Input
-              handleChange={handleChange}
-              name="password"
-              placeholder="Password"
-              label="Password"
-              type="password"
-            />
-            {isSignup && (
+            <div className="flex flex-col items-start w-full mb-[8px]">
               <Input
                 handleChange={handleChange}
-                label="Confirm Password"
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                type="password"
+                type="email"
+                name="email"
+                label="Email"
+                placeholder="Email"
+                classes={`border-2 border-gray-300 hover:border-gray-700 ${
+                  errors?.email
+                    ? 'border-red-500 focus:border-red-500'
+                    : 'border-gray-300 focus:border-blue-500'
+                }`}
               />
+              <p className="text-red-400 text-xs">{errors?.email}</p>
+            </div>
+            <div className="flex flex-col items-start w-full mb-[8px]">
+              <Input
+                handleChange={handleChange}
+                name="password"
+                placeholder="Password"
+                label="Password"
+                type="password"
+                classes={`border-2 border-gray-300 hover:border-gray-700 ${
+                  errors?.password
+                    ? 'border-red-500 focus:border-red-500'
+                    : 'border-gray-300 focus:border-blue-500'
+                }`}
+              />
+              <p className="text-red-400 text-xs">{errors?.password}</p>
+            </div>
+            {isSignup && (
+              <div className="flex flex-col items-start w-full mb-[8px]">
+                <Input
+                  handleChange={handleChange}
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  type="password"
+                  classes={`border-2 border-gray-300 hover:border-gray-700 ${
+                    errors?.password
+                      ? 'border-red-500 focus:border-red-500'
+                      : 'border-gray-300 focus:border-blue-500'
+                  }`}
+                />
+                <p className="text-red-400 text-xs">{errors?.password}</p>
+              </div>
             )}
             <button
               type="submit"
-              className="inline-block bg-[#6a55fa] text-sm font-semibold py-[8px] px-[30px] mt-2 w-full rounded text-white"
+              className="inline-block bg-[#6a55fa] hover:bg-[#816ffb] text-sm font-semibold py-[9px] px-[30px] mt-2 w-full rounded text-white text-center focusBtn"
             >
-              {isSignup ? 'Sign Up' : 'Sign In'}
+              {isLoading ? (
+                <AuthLoading />
+              ) : (
+                <>{isSignup ? 'Sign Up' : 'Sign In'}</>
+              )}
             </button>
             <button
               type="button"
               onClick={switchMode}
               className="flex items-center justify-center text-sm mt-[30px] text-[#8596A5]"
             >
-              Not registered?
-              <span className="ml-1 text-[#3DB4F2]">Create an account</span>
+              {isSignup ? (
+                <>
+                  Already have an account?
+                  <span className="ml-1 text-[#3DB4F2]">Sign in</span>
+                </>
+              ) : (
+                <>
+                  Don't have an account?
+                  <span className="ml-1 text-[#3DB4F2]">Sign Up</span>
+                </>
+              )}
             </button>
           </div>
         </form>
