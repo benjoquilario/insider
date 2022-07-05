@@ -1,6 +1,6 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { backdropVariant } from '../../utilities/framerVariant';
+import { backdropVariant } from '../../../utilities/framerVariant';
 
 const Backdrop = ({ handleClickOutside, children }) => (
   <AnimatePresence>
