@@ -1,10 +1,12 @@
 import React, { useCallback, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Post from './post';
+import PostLoading from '../UI/Loading/PostLoading';
 
-const Posts = ({ hasMore, currentId, setCurrentId, setPage }) => {
+const Posts = ({ hasMore }) => {
   const { isLoading, posts } = useSelector(state => state.posts);
   const observer = useRef();
+  const dispatch = useDispatch();
 
   const lastBookElementRef = useCallback(
     node => {
@@ -13,31 +15,27 @@ const Posts = ({ hasMore, currentId, setCurrentId, setPage }) => {
       observer.current = new IntersectionObserver(
         entries => {
           if (entries[0].isIntersecting && hasMore) {
-            setPage(prevPageNumber => prevPageNumber + 1);
+            dispatch({ type: 'ADD_POST_PAGE' });
           }
         },
         { rootMargin: '-150px' }
       );
       if (node) observer.current.observe(node);
     },
-    [isLoading, hasMore, setPage]
+    [isLoading, hasMore, dispatch]
   );
 
   return (
     <>
       {posts?.length === 0 ? (
-        <div>Loading</div>
+        <PostLoading />
       ) : (
-        <ul className="mt-4 flex flex-col gap-4">
+        <ul className="flex flex-col gap-4">
           {posts?.map((post, index) => {
             if (posts?.length === index + 1) {
               return (
                 <li className="relative" ref={lastBookElementRef} key={index}>
-                  <Post
-                    post={post}
-                    currentId={currentId}
-                    setCurrentId={setCurrentId}
-                  />
+                  <Post post={post} />
                 </li>
               );
             } else if (post === 0) {
@@ -45,21 +43,18 @@ const Posts = ({ hasMore, currentId, setCurrentId, setPage }) => {
             } else {
               return (
                 <li className="relative" key={index}>
-                  <Post
-                    post={post}
-                    currentId={currentId}
-                    setCurrentId={setCurrentId}
-                  />
+                  <Post post={post} />
                 </li>
               );
             }
           })}
+          {!hasMore && !isLoading && (
+            <p className="text-center text-sm">
+              There are no more posts to show right now
+            </p>
+          )}
+          {isLoading && <PostLoading />}
         </ul>
-      )}
-      {!hasMore && !isLoading && (
-        <p className="text-center text-sm">
-          There are no more posts to show right now
-        </p>
       )}
     </>
   );
