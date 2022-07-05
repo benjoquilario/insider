@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import * as TYPES from '../constants/ActionTypes';
 
 export const useModalCloser = () => {
   const { formModalOpen } = useSelector(state => state.modal);
@@ -12,7 +13,7 @@ export const useModalCloser = () => {
     const focusTrap = event => {
       if (event.key === 'Escape')
         dispatch({
-          type: 'CREATE_MODAL',
+          type: TYPES.CREATE_MODAL,
           payload: false,
         });
       if (event.key !== 'Tab') return;
@@ -29,10 +30,10 @@ export const useModalCloser = () => {
   const handleClickOutside = event => {
     if (ref.current && !ref.current?.contains(event.target)) {
       dispatch({
-        type: 'CREATE_MODAL',
+        type: TYPES.CREATE_MODAL,
         payload: false,
       });
-      dispatch({ type: 'CURRENT_ID', payload: 0 });
+      dispatch({ type: TYPES.CURRENT_POST_ID, payload: 0 });
     }
   };
 

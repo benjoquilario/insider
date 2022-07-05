@@ -32,6 +32,16 @@ export const getUser = id => async dispatch => {
   }
 };
 
+export const getSearchUser = query => async dispatch => {
+  try {
+    const requests = await api.fetchSearchUser(query);
+
+    dispatch({ type: 'SEARCH_RESULTS', payload: requests.data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const updateProfile = (id, updateData) => async dispatch => {
   try {
     const requests = await api.updateProfile(id, updateData);
@@ -115,7 +125,7 @@ export const getFollowingById = id => async dispatch => {
     const requests = await api.fetchFollowingById(id);
 
     if (requests.status === 200)
-      dispatch({ type: TYPES.FOLLOWERS_BY_ID, payload: requests.data });
+      dispatch({ type: TYPES.FOLLOWING_BY_ID, payload: requests.data });
   } catch (error) {
     dispatch({ type: TYPES.ERROR, payload: error });
   }

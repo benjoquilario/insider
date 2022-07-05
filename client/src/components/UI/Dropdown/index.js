@@ -1,8 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { BiExit } from 'react-icons/bi';
 import Button from '../Button/Button';
-import defaultImage from '../../../assets/images/default-image.png';
 
 const Dropdown = ({ user, logout }) => {
   return (

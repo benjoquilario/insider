@@ -57,7 +57,7 @@ const Post = ({ post, postById }) => {
   return (
     <div className="bg-gray-800 rounded-md flex flex-col gap-1 relative z-10 overflow-hidden">
       <div className="flex gap-3 p-3">
-        <Link to={`profile/${post.creator}`} aria-label={post.name}>
+        <Link to={`/profile/${post.creator}`} aria-label={post.name}>
           <img
             src={post?.users?.imageUrl || defaultImage}
             alt={post.name}
@@ -66,7 +66,7 @@ const Post = ({ post, postById }) => {
         </Link>
         <div className="leading-none mr-auto self-center flex flex-col">
           <Link
-            to={`profile/${post.creator}`}
+            to={`/profile/${post.creator}`}
             className="text-white font-semibold block text-base"
             aria-label={post.name}
           >
@@ -103,12 +103,6 @@ const Post = ({ post, postById }) => {
         >
           {post.message}
         </ShowMoreText>
-        {/* <pre
-          className={`${
-            clamped ? 'clamp' : ''
-          } text-sm md:text-md font-sans whitespace-pre-wrap text-white break-words`}
-        >
-        </pre> */}
       </div>
       {post?.selectedFile && (
         <img
