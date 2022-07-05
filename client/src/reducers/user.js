@@ -1,13 +1,14 @@
 import * as TYPES from '../constants/ActionTypes';
 
 const initialState = {
+  user: {},
+  users: [],
+  page: 1,
   loading: false,
   userLoading: false,
-  user: {},
-  searchUser: [],
-  users: [],
+  searchResults: [],
   followers: [],
-  page: 1,
+  following: [],
 };
 
 const userReducers = (state = initialState, action) => {
@@ -28,11 +29,17 @@ const userReducers = (state = initialState, action) => {
         user: { ...state.user, followers: action.payload.followers },
       };
     case TYPES.FOLLOWERS_BY_ID:
-      console.log(action.payload);
       return {
         ...state,
         followers: action.payload,
       };
+    case TYPES.FOLLOWING_BY_ID:
+      return {
+        ...state,
+        following: action.payload,
+      };
+    case TYPES.SEARCH_RESULTS:
+      return { ...state, searchResults: [...action.payload] };
     case TYPES.START_LOADING:
       return { ...state, loading: true };
     case TYPES.ADD_PAGE:
@@ -41,6 +48,8 @@ const userReducers = (state = initialState, action) => {
       return { ...state, page: 1 };
     case TYPES.CLEAR_USERS:
       return { ...state, users: [] };
+    case TYPES.CLEAR_SEARCH_RESULTS:
+      return { ...state, searchResults: [] };
     default:
       return state;
   }
