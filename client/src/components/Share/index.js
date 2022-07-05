@@ -1,33 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import defaultImage from '../../assets/images/default-image.png';
 import capitalizeName from '../../utilities/capitalizeName';
-import Button from '../Utilities/Button';
+import Button from '../UI/Button/Button';
+import { CREATE_MODAL } from '../../constants/ActionTypes';
 
 const Share = () => {
-  const user = JSON.parse(localStorage.getItem('profile'));
+  const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   return (
-    <div className="mt-4 relative h-20 bg-gray-800 flex justify-start items-center rounded p-2 px-1 md:px-3 gap-1 overflow-hidden">
-      <div className="min-h-6 w-20 max-w-20">
-        <Link
-          aria-label={user?.result?.name}
-          to={`profile/${user?.result?._id}`}
-          tabIndex={0}
-        >
-          <img
-            className="w-11 h-11 rounded-full object-cover m-auto"
-            src={defaultImage}
-            alt="avatar"
-          />
+    <div className="my-4 relative h-20 bg-gray-800 flex justify-start items-center rounded p-2 px-1 md:px-3 gap-2 overflow-hidden">
+      <div className="min-h-6 w-12 max-w-20">
+        <Link aria-label={user?.name} to={`profile/${user?._id}`} tabIndex={0}>
+          <figure className="relative w-full h-full overflow-hidden before:absolute before:w-full before:bg-gray-900 before:top-0 before:left-0 before:h-full before:rounded-full before:-z-10">
+            <img
+              className="w-11 h-11 rounded-full object-cover m-auto"
+              src={user?.imageUrl || defaultImage}
+              alt="avatar"
+            />
+          </figure>
         </Link>
       </div>
       <Button
         onClickHandler={() =>
           dispatch({
-            type: 'CREATE_MODAL',
+            type: CREATE_MODAL,
             payload: true,
           })
         }
@@ -36,7 +35,7 @@ const Share = () => {
       >
         <span className="ml-2 text-xs md:text-sm">
           What's on your mind,
-          {capitalizeName(user?.result?.name.split(' ')[0])}?
+          {capitalizeName(user?.name?.split(' ')[0])}?
         </span>
       </Button>
     </div>
