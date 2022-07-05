@@ -1,75 +1,82 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import capitalizeName from '../../../utilities/capitalizeName';
-import Logo from '../../../assets/images/icon.png';
+import classNames from 'classnames';
+import { Link, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { BsPeopleFill, BsFillPersonFill } from 'react-icons/bs';
 import { IoIosPeople } from 'react-icons/io';
 import { AiFillHome } from 'react-icons/ai';
-import { useDispatch } from 'react-redux';
-import Button from '../../Utilities/Button';
+import Logo from '../../../assets/images/icon.png';
+import Button from '../../UI/Button/Button';
+import defaultImage from '../../../assets/images/default-image.png';
+import UserLoading from '../../UI/Loading/UserLoading';
+import capitalizeName from '../../../utilities/capitalizeName';
+import * as TYPES from '../../../constants/ActionTypes';
 
 const Header = () => {
-  const user = JSON.parse(localStorage.getItem('profile'));
   const dispatch = useDispatch();
   const location = useLocation();
   const path = location.pathname.toLowerCase();
+  const { user, userLoading } = useSelector(state => state.auth);
 
   return (
     <div className="hidden lg:block col-span-3">
       <div className="sticky top-0">
         <Link to="/" aria-label="home - insider">
           <div className="text-2xl flex gap-3 justify-center items-center h-14 w-full font-light text-white">
-            <img src={Logo} alt="Insider Home" className="h-11 w-11" />
+            <img src={Logo} alt="Insider - Home" className="h-11 w-11" />
             <span className="uppercase">Insider</span>
           </div>
         </Link>
-        <div className="px-2 py-5 rounded">
-          <div className="flex justify-center">
-            <Link to={`profile/${user?.result?._id}`} aria-label="profile link">
-              <img
-                className="h-12 w-12 rounded-full object-cover"
-                src="https://res.cloudinary.com/securing-future/image/upload/v1634784867/lrbkmns3lttmmtdn22y4.jpg"
-                alt={user?.result?.name}
-              />
-            </Link>
-            <div className="flex flex-col justify-center ml-2">
-              <Link
-                to={`profile/${user?.result?._id}`}
-                className="text-white text-base font-semibold"
-              >
-                {capitalizeName(user?.result?.name)}
+        {userLoading ? (
+          <UserLoading />
+        ) : (
+          <div className="px-2 py-5 rounded">
+            <div className="flex justify-center">
+              <Link to={`profile/${user?._id}`} aria-label="profile link">
+                <img
+                  className="h-12 w-12 rounded-full object-cover"
+                  src={user?.imageUrl || defaultImage}
+                  alt={user?.name}
+                />
               </Link>
-              <span className="text-gray-200 text-xs">
-                {user?.result?.followers.length} Followers
-              </span>
+              <div className="flex flex-col justify-center ml-2">
+                <Link
+                  to={`profile/${user?._id}`}
+                  className="text-white text-base font-semibold"
+                >
+                  {capitalizeName(user?.name)}
+                </Link>
+                <span className="text-gray-200 text-xs">
+                  {user?.followers?.length} Followers
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
         <div className="mt-3">
           <nav className="w-full">
             <ul className="flex flex-col items-start gap-1">
               <li className="w-full flex-1 flex items-start">
                 <Link
                   aria-label="home"
-                  className={`${
-                    path.includes('/' || '/home')
-                      ? 'bg-gray-800 text-[#6a55fa]'
-                      : 'text-white'
-                  } w-full hover:bg-gray-800 flex items-center gap-4  font-semibold py-[12px] px-[50px] rounded-xl transition`}
+                  /* prettier-ignore */
+                  className={classNames( path === '/' || path === '/home' ? 'bg-gray-800 text-[#6a55fa]': 'text-white', 'hover:bg-gray-800 navLink')}
                   to="/"
                 >
                   <AiFillHome aria-hidden="true" size={29} />
-                  <span className="text-md text-white text-left">Home</span>
+                  <span className="text-base text-white text-left">Home</span>
                 </Link>
               </li>
               <li className="w-full flex-1 flex items-start">
                 <Link
                   aria-label="followers"
-                  className="w-full hover:bg-gray-800 flex items-center gap-4 text-white font-semibold py-[12px] px-[50px] rounded-xl transition"
+                  /* prettier-ignore */
+                  className={classNames(path.includes('/followers') ? 'bg-gray-800 text-[#6a55fa]': 'text-white', 'hover:bg-gray-800 navLink')}
                   to="/followers"
                 >
                   <BsPeopleFill aria-hidden="true" size={29} />
-                  <span className="text-md text-white text-left">
+                  <span className="text-base text-white text-left">
                     Followers
                   </span>
                 </Link>
@@ -77,11 +84,12 @@ const Header = () => {
               <li className="w-full flex-1 flex items-start">
                 <Link
                   aria-label="following"
-                  className="w-full hover:bg-gray-800 flex items-start gap-4 text-white font-semibold py-[12px] px-[50px] rounded-xl transition"
+                  /* prettier-ignore */
+                  className={classNames(path.includes('/following') ? 'bg-gray-800 text-[#6a55fa]': 'text-white' , 'hover:bg-gray-800 navLink')}
                   to="/following"
                 >
                   <IoIosPeople aria-hidden="true" size={29} />
-                  <span className="text-md text-white text-left">
+                  <span className="text-base text-white text-left">
                     Following
                   </span>
                 </Link>
@@ -89,26 +97,31 @@ const Header = () => {
               <li className="w-full flex-1 flex items-start">
                 <Link
                   aria-label="profile"
-                  className="w-full hover:bg-gray-800 flex items-start gap-4 text-white font-semibold py-[12px] px-[50px] rounded-xl transition"
-                  to="/following"
+                  /* prettier-ignore */
+                  className={classNames(path.includes('profile') ? 'bg-gray-800 text-[#6a55fa]': 'text-white', 'hover:bg-gray-800 navLink')}
+                  to={`/profile/${user?._id}`}
                 >
                   <BsFillPersonFill aria-hidden="true" size={29} />
-                  <span className="text-md text-white text-left">Profile</span>
+                  <span className="text-base text-white text-left">
+                    Profile
+                  </span>
                 </Link>
               </li>
-              <li className="w-full flex-1 flex items-center justify-center">
-                <Button
-                  onClickHandler={() =>
-                    dispatch({
-                      type: 'CREATE_MODAL',
-                      payload: true,
-                    })
-                  }
-                  ariaLabel="Create post"
-                  classes="mt-4 bg-[#6a55fa] flex items-center justify-center text-white h-12 w-full rounded-full hover:bg-[#8371f8] transition duration-75"
-                >
-                  Create Post
-                </Button>
+              <li className="w-full flex-1 mt-3">
+                <div className="w-full flex items-center justify-center">
+                  <Button
+                    onClickHandler={() =>
+                      dispatch({
+                        type: TYPES.CREATE_MODAL,
+                        payload: true,
+                      })
+                    }
+                    ariaLabel="Create post"
+                    classes="text-base bg-[#6a55fa] flex items-center justify-center text-white h-12 w-full rounded-full hover:bg-[#8371f8] transition duration-75"
+                  >
+                    Create Post
+                  </Button>
+                </div>
               </li>
             </ul>
           </nav>
@@ -119,181 +132,3 @@ const Header = () => {
 };
 
 export default Header;
-/**
- * 
- * 
-  <ul className="rounded-xl">
-          <li className="h-[16rem] md:col-span-3 mt-3 overflow-auto">
-            <div>
-              <div className="flex flex-col justify-center w-full border-t border-gray-400 rounded-xl py-3">
-                <p className="text-md font-bold text-center text-white">
-                  Followers
-                </p>
-                {/* <p className="text-sm font-semibold text-center mt-2 text-slate-300">
-                  You don't have any followers.
-                </p> 
-                <ul className="flex flex-col gap-1">
-                  <li className="relative h-14 overflow-hidden">
-                    <Link to="profile">
-                      <img
-                        className="object-cover w-full h-full opacity-30 object-center"
-                        src="https://res.cloudinary.com/securing-future/image/upload/v1655122268/w0luocz79lomub3hjj1j.jpg"
-                        alt=""
-                      />
-                      <div className="absolute inset-0 flex items-center overflow-hidden">
-                        <div className="ml-3">
-                          <img
-                            className="h-12 w-12 rounded-full"
-                            src="https://res.cloudinary.com/securing-future/image/upload/v1655122317/dcz9vemzk4be34heot7d.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-4 flex-1">
-                          <h3 className="text-white font-semibold leading-tight">
-                            Benjo Quilario
-                          </h3>
-                          <p className="text-gray-200 text-sm">0 Followers</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                  <li className="relative h-14 overflow-hidden">
-                    <Link to="profile">
-                      <img
-                        className="object-cover w-full h-full opacity-30 object-center"
-                        src="https://res.cloudinary.com/securing-future/image/upload/v1655122268/w0luocz79lomub3hjj1j.jpg"
-                        alt=""
-                      />
-                      <div className="absolute inset-0 flex items-center overflow-hidden">
-                        <div className="ml-3">
-                          <img
-                            className="h-12 w-12 rounded-full"
-                            src="https://res.cloudinary.com/securing-future/image/upload/v1655122317/dcz9vemzk4be34heot7d.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-4 flex-1">
-                          <h3 className="text-white font-semibold leading-tight">
-                            Joben Quilario
-                          </h3>
-                          <p className="text-gray-200 text-sm">99 Followers</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                  <li className="relative h-14 overflow-hidden">
-                    <Link to="profile">
-                      <img
-                        className="object-cover w-full h-full opacity-30 object-center"
-                        src="https://res.cloudinary.com/securing-future/image/upload/v1655122268/w0luocz79lomub3hjj1j.jpg"
-                        alt=""
-                      />
-                      <div className="absolute inset-0 flex items-center overflow-hidden">
-                        <div className="ml-3">
-                          <img
-                            className="h-12 w-12 rounded-full"
-                            src="https://res.cloudinary.com/securing-future/image/upload/v1655122317/dcz9vemzk4be34heot7d.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-4 flex-1">
-                          <h3 className="text-white font-semibold leading-tight">
-                            Joben Quilario
-                          </h3>
-                          <p className="text-gray-200 text-sm">99 Followers</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </li>
-          <li className="h-[16rem] md:col-span-3 mt-3 overflow-auto">
-            <div>
-              <div className="flex flex-col justify-center w-full border-t border-gray-400 rounded-xl py-3">
-                <p className="text-md font-bold text-center text-white">
-                  Following
-                </p>
-                 <p className="text-sm font-semibold text-center mt-2 text-slate-300">
-                  0 following.
-                </p> 
-                <ul className="flex flex-col gap-1">
-                  <li className="relative h-14 overflow-hidden">
-                    <Link to="profile">
-                      <img
-                        className="object-cover w-full h-full opacity-30 object-center"
-                        src="https://res.cloudinary.com/securing-future/image/upload/v1655122268/w0luocz79lomub3hjj1j.jpg"
-                        alt=""
-                      />
-                      <div className="absolute inset-0 flex items-center overflow-hidden">
-                        <div className="ml-3">
-                          <img
-                            className="h-12 w-12 rounded-full"
-                            src="https://res.cloudinary.com/securing-future/image/upload/v1655122317/dcz9vemzk4be34heot7d.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-4 flex-1">
-                          <h3 className="text-sm text-white font-semibold leading-tight">
-                            Benjo Quilario
-                          </h3>
-                          <p className="text-gray-200 text-sm">0 Followers</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                  <li className="relative h-14 overflow-hidden">
-                    <Link to="profile">
-                      <img
-                        className="object-cover w-full h-full opacity-30 object-center"
-                        src="https://res.cloudinary.com/securing-future/image/upload/v1655122268/w0luocz79lomub3hjj1j.jpg"
-                        alt=""
-                      />
-                      <div className="absolute inset-0 flex items-center overflow-hidden">
-                        <div className="ml-3">
-                          <img
-                            className="h-12 w-12 rounded-full"
-                            src="https://res.cloudinary.com/securing-future/image/upload/v1655122317/dcz9vemzk4be34heot7d.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-4 flex-1">
-                          <h3 className="text-sm text-white font-semibold leading-tight">
-                            Joben Quilario
-                          </h3>
-                          <p className="text-gray-200 text-sm">99 Followers</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                  <li className="relative h-14 overflow-hidden">
-                    <Link to="profile">
-                      <img
-                        className="object-cover w-full h-full opacity-30 object-center"
-                        src="https://res.cloudinary.com/securing-future/image/upload/v1655122268/w0luocz79lomub3hjj1j.jpg"
-                        alt=""
-                      />
-                      <div className="absolute inset-0 flex items-center overflow-hidden">
-                        <div className="ml-3">
-                          <img
-                            className="h-12 w-12 rounded-full"
-                            src="https://res.cloudinary.com/securing-future/image/upload/v1655122317/dcz9vemzk4be34heot7d.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <div className="ml-4 flex-1">
-                          <h3 className="text-white font-semibold leading-tight">
-                            Joben Quilario
-                          </h3>
-                          <p className="text-gray-200 text-sm">99 Followers</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </li>
-        </ul>
- */
