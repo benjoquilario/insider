@@ -1,43 +1,139 @@
-import React from 'react';
-import moment from 'moment';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import capitalizeName from '../../../utilities/capitalizeName';
+import ShowMoreText from 'react-show-more-text';
+import calculateTime from '../../../utilities/calculateTime';
+import defaultImage from '../../../assets/images/default-image.png';
+import Button from '../../UI/Button/Button';
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
+import ModalComment from '../../Modal/ModalComment';
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, userId }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const refx = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (refx.current && !refx.current?.contains(event.target)) {
+        setModalOpen(false);
+      }
+    };
+
+    const focusTrap = event => {
+      if (event.key === 'Escape') setModalOpen(false);
+      if (event.key !== 'Tab') return;
+    };
+
+    document
+      .getElementById('comment')
+      .addEventListener('click', handleClickOutside);
+    document.addEventListener('keydown', focusTrap);
+
+    return () => {
+      document.removeEventListener('keydown', focusTrap);
+    };
+  }, [modalOpen]);
+
   return (
-    <div className="flex items-start pl-5 pr-3 mt-3">
-      <div
-        style={{
-          position: 'fixed',
-          zIndex: '9999',
-          inset: '16px',
-          pointerEvents: 'none',
-        }}
-      ></div>
-      <img
-        src="https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
-        className="object-cover h-11 w-11 rounded-full mr-2"
-        alt="profile"
-      />
-      <div className="flex items-center flex-shrink">
-        <div className="bg-gray-700 rounded-3xl items-center py-2.5 px-4">
-          <div className="flex space-x-1">
-            <Link to="profile">
-              <h3 className="font-semibold -mt-0.5 text-sm text-gray-100">
-                {capitalizeName(comment.user[0].name)} ·{' '}
-              </h3>
+    <div>
+      <div className="relative flex pt-2 pl-6">
+        <div className="relative mt-1 block mr-2 rounded-full">
+          <span className="inline">
+            <Link
+              to={`/profile/${comment.user._id}`}
+              className="relative items-stretch inline-block shrink basis-[auto] w-full"
+            >
+              <div className="relative inline-block">
+                <img
+                  className="w-9 h-9 rounded-full object-cover"
+                  src={comment.user.imageUrl || defaultImage}
+                  alt="prof"
+                />
+              </div>
+              <div className="absolute inset-0 rounded-full pointer-events-none"></div>
             </Link>
-            <span className="text-gray-200 font-light text-sm no-underline">
-              {/* {moment(comment.createdAt)} */}
-            </span>
-          </div>
-          <p className="text-gray-300 font-light">{comment.comment}</p>
+          </span>
         </div>
-        <div style={{ width: '3rem', marginLeft: '0.2rem' }}>
-          <div
-            className="CommentComponent__ThreeDotsDiv-sc-12j1abr-2 dEfgTX"
-            style={{ visibility: 'hidden' }}
-          ></div>
+        <div className="overflow-hidden pr-4 grow mr-10 basis-0">
+          <div>
+            <div
+              className="break-words inline-block max-w-[calc(100%_-_26px]"
+              style={{ wordBreak: 'break-word' }}
+            >
+              <div className="relative inline-flex w-full align-middle">
+                <div className="w-full min-w-0 shrink grow base-[auto]">
+                  <div
+                    className="relative break-words inline-block max-w-full text-white whitespace-normal rounded-2xl bg-gray-700"
+                    style={{ wordBreak: 'break-word' }}
+                  >
+                    <div className="py-[6px] px-[12px]">
+                      <span>
+                        <span className="inline">
+                          <Link
+                            className="inline bg-gray-700"
+                            to={`/profile/${comment.user._id}`}
+                          >
+                            <span className="inline-flex">
+                              <span
+                                className="font-semibold text-white text-sm max-w-full capitalize"
+                                style={{ wordBreak: 'break-word' }}
+                              >
+                                {comment.user.name}
+                              </span>
+                            </span>
+                          </Link>
+                          <span className="text-xs text-gray-200 ml-2">
+                            · {calculateTime(comment.createdAt, true)}
+                          </span>
+                        </span>
+                      </span>
+                      <div className="block pb-[4px] pt-[4px]">
+                        <span
+                          className="break-words"
+                          style={{ wordBreak: 'break-word' }}
+                        >
+                          <div
+                            className="text-sm"
+                            style={{ wordBreak: 'break-word' }}
+                          >
+                            <div dir="auto" className="text-start font-sans">
+                              <ShowMoreText
+                                lines={6}
+                                more="Show more"
+                                less="...Show less"
+                                className="text-start font-sans"
+                                anchorClass="text-gray-300 hover:text-gray-200"
+                                width={1000}
+                              >
+                                {comment.comment}
+                              </ShowMoreText>
+                            </div>
+                          </div>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div ref={refx} className="absolute top-0 right-0 w-1/2 h-0">
+          {modalOpen && (
+            <div className="absolute top-12 md:top-[21px] md:right-[60px] z-30 right-3 bg-gray-800 w-full md:w-1/2 h-auto rounded border border-gray-600 border-solid	shadow-xl">
+              <ModalComment comment={comment} />
+            </div>
+          )}
+          {comment.user._id === userId && (
+            <div className="self-end absolute top-3 right-5">
+              <Button
+                onClickHandler={() => setModalOpen(prev => !prev)}
+                classes="p-1 text-white rounded-full hover:bg-gray-700"
+                ariaLabel="action list"
+              >
+                <BiDotsHorizontalRounded aria-hidden="true" size={22} />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
