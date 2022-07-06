@@ -1,3 +1,3 @@
-const baseUrl = 'http://localhost:5000';
+const baseUrl = 'https://mern-insider.herokuapp.com';
 
 export default baseUrl;
