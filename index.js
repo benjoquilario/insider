@@ -39,7 +39,6 @@ mongoose.connect('mongodb+srv://d_insider:qwerty123456@nodejs.izk1vhl.mongodb.ne
   )
   .catch(error => console.log(`${error} did not connect`));
 
-if (process.end.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
-    

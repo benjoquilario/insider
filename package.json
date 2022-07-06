@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "build": "cd client && yarn run build",
-    "install-client": "cd client && yarn run install",
-    "heroku-postbuild": "yarn run install-client && yarn run build"
+    "build": "cd client && yarn build",
+    "install-client": "cd client && yarn install",
+    "heroku-postbuild": "yarn install-client && yarn build",
+    "client": "cd client && yarn start"
   },
   "author": "benjo quilario",
   "license": "MIT",
