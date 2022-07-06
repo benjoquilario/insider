@@ -1,11 +1,13 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import postRoutes from './routes/posts.js';
 import authRoutes from './routes/auth.js';
 import usersRoutes from './routes/users.js';
+
+dotenv.config();
 
 const app = express();
 
@@ -13,10 +15,8 @@ app.use(bodyParser.json({ limit: '30mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
 
-dotenv.config();
-
 app.get('/', (req, res) => {
-  res.send('APP IS RUNNING');
+  res.send('APPLICATION IS RUNNING');
 });
 
 // Routes
@@ -25,9 +25,10 @@ app.use('/auth', authRoutes);
 app.use('/users', usersRoutes);
 
 const PORT = process.env.PORT || 5000;
+const URI = process.env.CONNECTION_URL;
 
-mongoose
-  .connect(process.env.CONNECTION_URL, {
+//prettier-ignore
+mongoose.connect('mongodb+srv://d_insider:qwerty123456@nodejs.izk1vhl.mongodb.net/db_insider?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -37,3 +38,8 @@ mongoose
     )
   )
   .catch(error => console.log(`${error} did not connect`));
+
+if (process.end.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
+}
+    
