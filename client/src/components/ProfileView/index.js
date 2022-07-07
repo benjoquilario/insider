@@ -64,15 +64,17 @@ const ProfileView = ({ hasMore }) => {
                   className="h-full w-full object-cover"
                 />
               )}
-              <button
-                onClick={() => {
-                  setIsProfile(false);
-                  setIsOpen(true);
-                }}
-                className="absolute bg-gray-100 right-3 bottom-3 shadow-md rounded-full h-8 w-8 flex justify-center items-center"
-              >
-                <AiFillCamera size={20} />
-              </button>
+              {user?._id === currUser?.user?._id && (
+                <button
+                  onClick={() => {
+                    setIsProfile(false);
+                    setIsOpen(true);
+                  }}
+                  className="absolute bg-gray-100 right-3 bottom-3 shadow-md rounded-full h-8 w-8 flex justify-center items-center"
+                >
+                  <AiFillCamera size={20} />
+                </button>
+              )}
             </div>
           </div>
           <div className="space-y-4">
@@ -84,15 +86,17 @@ const ProfileView = ({ hasMore }) => {
                     src={user?.imageUrl || defaultImage}
                     alt=""
                   />
-                  <button
-                    onClick={() => {
-                      setIsProfile(true);
-                      setIsOpen(true);
-                    }}
-                    className="absolute text-[#6a55fa] bg-gray-100 right-0 bottom-3 shadow-md rounded-full h-8 w-8 flex justify-center items-center"
-                  >
-                    <AiFillCamera size={20} />
-                  </button>
+                  {user?._id === currUser?.user?._id && (
+                    <button
+                      onClick={() => {
+                        setIsProfile(true);
+                        setIsOpen(true);
+                      }}
+                      className="absolute text-[#6a55fa] bg-gray-100 right-0 bottom-3 shadow-md rounded-full h-8 w-8 flex justify-center items-center"
+                    >
+                      <AiFillCamera size={20} />
+                    </button>
+                  )}
                 </div>
                 <div className="text-center sm:text-left">
                   <div>
