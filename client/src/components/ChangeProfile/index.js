@@ -104,7 +104,7 @@ const ChangeProfile = ({
             <button
               type="submit"
               className="flex items-center justify-center bg-[#6a55fa] w-full rounded-md px-3 py-2 text-white hover:bg-[#816ffb]"
-              disabled={postData?.changePhoto.length <= 0 || postData?.changeCover.length <= 0}
+              // disabled={postData?.changePhoto.length <= 0 || postData?.changeCover.length <= 0}
             >
               {isProfile ? 'Change Photo' : 'Change Cover Photo'}
             </button>
