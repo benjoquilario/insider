@@ -6,6 +6,7 @@ import { RiCloseFill } from 'react-icons/ri';
 import { useModalCloser } from '../../hooks/useModalOpen';
 import { AnimatePresence } from 'framer-motion';
 import { getPosts } from '../../actions/posts';
+import Ripples from 'react-ripples';
 import Header from '../../components/Layout/Header';
 import Main from '../../components/Layout/Main';
 import Right from '../../components/Layout/Right';
@@ -53,18 +54,21 @@ const Home = () => {
                   <h3 className="p-2 text-base md:text-lg text-white">
                     {currentPostId ? 'Editing' : 'Creating'} Post
                   </h3>
-                  <button
-                    className="text-white rounded-full p-2 transition ease-in duration-75"
-                    onClick={() => {
-                      dispatch({
-                        type: TYPES.CREATE_MODAL,
-                        payload: false,
-                      });
-                      dispatch({ type: TYPES.CURRENT_POST_ID, payload: 0 });
-                    }}
-                  >
-                    <RiCloseFill size={25} />
-                  </button>
+                  <Ripples color="#ffffff80">
+                    <button
+                      className="text-white rounded-full p-2 transition ease-in duration-75 hover:bg-gray-700"
+                      onClick={() => {
+                        dispatch({
+                          type: TYPES.CREATE_MODAL,
+                          payload: false,
+                        });
+                        dispatch({ type: TYPES.CURRENT_POST_ID, payload: 0 });
+                      }}
+                      aria-label="close modal"
+                    >
+                      <RiCloseFill aria-hidden="true" size={25} />
+                    </button>
+                  </Ripples>
                 </div>
                 <Form />
               </div>

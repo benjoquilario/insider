@@ -25,10 +25,10 @@ app.use('/auth', authRoutes);
 app.use('/users', usersRoutes);
 
 const PORT = process.env.PORT || 5000;
-const URI = process.env.CONNECTION_URL;
+const URI = process.env.MONGO_URI;
 
 //prettier-ignore
-mongoose.connect('mongodb+srv://d_insider:qwerty123456@nodejs.izk1vhl.mongodb.net/db_insider?retryWrites=true&w=majority', {
+mongoose.connect(URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

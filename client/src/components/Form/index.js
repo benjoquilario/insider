@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import FileBase from 'react-file-base64';
+import Ripples from 'react-ripples';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPost, updatePost } from '../../actions/posts';
 import { intitialState } from '../../utilities/intialState';
 import { formVariant } from '../../utilities/framerVariant';
 import capitalizeName from '../../utilities/capitalizeName';
 import * as TYPES from '../../constants/ActionTypes';
+import { RiCloseFill } from 'react-icons/ri';
 
 const Form = () => {
   const user = JSON.parse(localStorage.getItem('profile'));
@@ -76,6 +78,12 @@ const Form = () => {
           {postData?.selectedFile && (
             <div className="relative overflow-auto h-56">
               <img src={postData?.selectedFile} alt="post" />
+              <button
+                onClick={() => setPostData({ ...postData, selectedFile: '' })}
+                className="absolute top-2 right-0 text-white rounded-full p-1 transition ease-in duration-75 hover:bg-gray-700 bg-gray-600"
+              >
+                <RiCloseFill aria-hidden="true" size={22} />
+              </button>
             </div>
           )}
           <div className="flex items-center gap-2">
@@ -92,13 +100,15 @@ const Form = () => {
           </div>
         </div>
         <div className="flex items-center justify-center">
-          <button
-            type="submit"
-            disabled={postData.message <= 0}
-            className="flex items-center justify-center m-3 bg-[#6a55fa] w-full rounded-md px-3 py-2 text-white text-sm md:text-base disabled:bg-[#6a55fa1a]"
-          >
-            {currentPostId ? 'Edit' : 'Create'} Post
-          </button>
+          <Ripples color="#ffffff80" className="w-full">
+            <button
+              type="submit"
+              disabled={postData.message <= 0}
+              className="flex items-center justify-center m-3 bg-[#6a55fa] w-full rounded-md px-3 py-2 text-white text-sm md:text-base disabled:bg-[#6a55fa1a]"
+            >
+              {currentPostId ? 'Edit' : 'Create'} Post
+            </button>
+          </Ripples>
         </div>
       </form>
     </motion.div>
