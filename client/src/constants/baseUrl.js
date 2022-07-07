@@ -1,3 +1,3 @@
-const baseUrl = 'https://mern-insider.herokuapp.com';
+const baseUrl = 'https://insider-social-media.herokuapp.com/';
 
 export default baseUrl;
