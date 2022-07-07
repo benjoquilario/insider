@@ -53,7 +53,7 @@ const Auth = () => {
           ) : (
             <div className="flex flex-col ">
               <span className="text-base font-light tracking-tight">
-                Welcome to Back!
+                Welcome to Insider!
               </span>
               <span className="text-lg font-normal tracking-wide">
                 Sign in to your account
