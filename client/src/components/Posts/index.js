@@ -49,7 +49,7 @@ const Posts = ({ hasMore }) => {
             }
           })}
           {!hasMore && !isLoading && (
-            <p className="text-center text-sm">
+            <p className="text-center text-sm text-gray-300">
               There are no more posts to show right now
             </p>
           )}
