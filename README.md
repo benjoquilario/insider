@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://insider.vercel.app/">
-    <img alt="Insider" src="client/src/assets/icon.png" width="125" />
+    <img alt="Insider" src="screenshots/icon.png" width="125" />
   </a>
 </p>
 
@@ -46,7 +46,7 @@ A Fullstack **social media application** built with **_React JS_**, **_Redux_** 
   <img src="screenshots/home.png" />
 </a>
 <a href="https://insider.vercel.app/" target="blank">
-  <img src="screenshots/home.png" />
+  <img src="screenshots/profile.png" />
 </a>
 
 Try the App: [Insider](https://insider.vercel.app/)
