@@ -126,7 +126,7 @@ You are all set! Open [localhost:3000](http://localhost:3000/) to see the app.
 
 Your ideas, translations, design changes, code cleaning, real heavy code changes, or any help are always welcome. The more is the contribution, the better it gets.
 
-[Pull requests](https://github.com/mukul500/AnimeXStream/pulls) will be reviewed
+[Pull requests](https://github.com/benjoquilario/insider/pulls) will be reviewed
 
 ## Author
 
