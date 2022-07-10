@@ -101,10 +101,16 @@ MONGO_URI= YOUR_MONDO_ATLAS_DATABASE_URL
 SECRET_JWT= YOUR_JWT_SECRET
 ```
 
-5. Run the app
+5. Run the server
 
 ```bash
-npm run start or yarn start for server-side and npm run client or yarn client for client-side
+npm run start or yarn start
+```
+
+6. Run the client
+
+```bash
+npm run client or yarn client
 ```
 
 You are all set! Open [localhost:3000](http://localhost:3000/) to see the app.
