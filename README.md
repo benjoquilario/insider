@@ -3,7 +3,9 @@
     <img alt="Insider" src="screenshots/icon.png" width="125" />
   </a>
 </p>
+  
 
+Moving to next js [Next Insider](https://github.com/benjoquilario/next-insider)
 <p align="center">
   <a href="https://insider.vercel.app/">
     <img alt="Insider" src="screenshots/title.png" width="300" />
