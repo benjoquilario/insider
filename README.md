@@ -4,8 +4,9 @@
   </a>
 </p>
   
-
+<p align="center">
 This project is not longer maintained we are moving it to nextjs, you can still login with your account though - [Next Insider](https://github.com/benjoquilario/next-insider)
+</p>
 <p align="center">
   <a href="https://insider.vercel.app/">
     <img alt="Insider" src="screenshots/title.png" width="300" />
